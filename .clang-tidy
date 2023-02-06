@@ -1,0 +1,5 @@
+Checks: 'performance-*, readability-*, cppcoreguidelines-*, bugprone-*, clang-analyzer-*, modernize-*, -readability-braces-around-statements'
+CheckOptions:
+  readability-implicit-bool-conversion.AllowPointerConditions: true
+  readability-identifier-length.MinimumVariableNameLength: 2
+  readability-identifier-length.MinimumParameterNameLength: 2
