@@ -8,6 +8,7 @@ test_exe = executable(
   'thyme_test',
   test_sources,
   dependencies: [thyme_dep, local_deps],
+  override_options: compilation_options
 )
 
 tests = []

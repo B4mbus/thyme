@@ -20,7 +20,7 @@ local_deps = [
   dependency('argparse', required: true),
 ]
 
-executable_options = [
+compilation_options = [
   'cpp_std=c++20'
 ]
 
@@ -40,6 +40,7 @@ executable(
   'thyme',
   files('src/main.cpp'),
   dependencies: thyme_dep,
+override_options: compilation_options,
   install: true
 )
 
