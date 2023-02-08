@@ -40,7 +40,7 @@ executable(
   'thyme',
   files('src/main.cpp'),
   dependencies: thyme_dep,
-override_options: compilation_options,
+  override_options: compilation_options,
   install: true
 )
 
