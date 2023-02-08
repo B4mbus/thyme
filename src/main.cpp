@@ -1,8 +1,8 @@
 #include <fmt/format.h>
-#include <fmt/color.h>
 
 #include <argparse/argparse.hpp>
 
+#include "thyme/cli_handlers.hpp"
 #include "thyme/version.hpp"
 
 auto main(int argc, char** argv) -> int {
@@ -31,21 +31,7 @@ auto main(int argc, char** argv) -> int {
     program.parse_args(argc, argv);
 
     if(program.is_subcommand_used("version")) {
-      auto constexpr print_version = [](auto name, auto version, auto fg_format) {
-        fmt::print(
-          "{} version: {}\n",
-          fmt::format(fg_format, name),
-          fmt::format(fmt::emphasis::bold | fg(fmt::color::light_steel_blue), version)
-        );
-      };
-
-      print_version("Thyme", thyme::meta::version(), fg(fmt::color::light_sea_green));
-      if(not version_subcommand.is_used("--no-fennel")) {
-        print_version("Fennel", "?", fg(fmt::color::light_green));
-      }
-      if(not version_subcommand.is_used("--no-lua")) {
-        print_version("Lua", "?", fg(fmt::color::blue));
-      }
+      thyme::cli_handlers::handle_version(version_subcommand);
     }
   } catch(std::runtime_error const& err) {
     fmt::print("{}\n{}", err.what(), program.help().str());

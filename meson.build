@@ -15,9 +15,14 @@ version_file = vcs_tag(
   output: 'version.cpp'
 )
 
+cmake = import('cmake')
+
+tiny_process_lib = cmake.subproject('tiny-process-lib')
+
 local_deps = [
   dependency('fmt', required: true),
   dependency('argparse', required: true),
+  tiny_process_lib.dependency('tiny-process-library')
 ]
 
 compilation_options = [
@@ -28,7 +33,9 @@ include_dirs = [
   include_directories('include')
 ]
 
-sources = files()
+sources = files(
+  'src/cli_handlers.cpp'
+)
 
 thyme_dep = declare_dependency(
   sources: [sources, version_file],
