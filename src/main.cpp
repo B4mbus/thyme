@@ -31,7 +31,7 @@ auto main(int argc, char** argv) -> int {
     program.parse_args(argc, argv);
 
     if(program.is_subcommand_used("version")) {
-      thyme::cli_handlers::handle_version(version_subcommand);
+      thyme::cli_handlers::version(version_subcommand);
     }
   } catch(std::runtime_error const& err) {
     fmt::print("{}\n{}", err.what(), program.help().str());

@@ -8,6 +8,6 @@ class ArgumentParser;
 
 namespace thyme::cli_handlers {
 
-auto handle_version(argparse::ArgumentParser const& subcommand) -> void;
+auto version(argparse::ArgumentParser const& subcommand) -> void;
 
 } // namespace thyme::cli_handlers

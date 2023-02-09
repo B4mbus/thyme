@@ -38,7 +38,7 @@ auto extract_output_from_command(auto cmd) {
 
 namespace thyme::cli_handlers {
 
-auto handle_version(argparse::ArgumentParser const& subcommand) -> void {
+auto version(argparse::ArgumentParser const& subcommand) -> void {
   auto constexpr print_version = [](auto name, auto version, auto fg_format) {
     fmt::print(
       "{} version: {}\n",

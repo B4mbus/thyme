@@ -34,7 +34,7 @@ include_dirs = [
 ]
 
 sources = files(
-  'src/cli_handlers.cpp'
+  'src/cli_handlers/version.cpp'
 )
 
 thyme_dep = declare_dependency(
