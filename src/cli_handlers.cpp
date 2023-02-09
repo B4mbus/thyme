@@ -11,6 +11,7 @@
 
 #include <process.hpp>
 
+#include "thyme/synchronized_process.hpp"
 #include "thyme/cli_handlers.hpp"
 #include "thyme/version.hpp"
 
@@ -26,23 +27,11 @@ auto extract_versions_from_str(std::string_view tab_delimited_string) {
 }
 
 auto extract_output_from_command(auto cmd) {
-  // TODO: implement timeout and extract to a class handling both stdout and stderr
-  auto proc_output = std::string();
-  auto proc_latch = std::latch(1);
+  auto proc = thyme::SynchronizedProcess(cmd);
+  proc.wait_on_stdout();
+  std::erase(proc.stdout, '\n');
 
-  auto proc = TinyProcessLib::Process(
-    cmd,
-    "",
-    [&proc_output, &proc_latch](char const* bytes, std::size_t n) {
-      proc_output.append(std::string_view(bytes, n));
-      std::erase(proc_output, '\n');
-
-      proc_latch.count_down();
-    }
-  );
-
-  proc_latch.wait();
-  return proc_output;
+  return proc.stdout;
 }
 
 } // namespace
