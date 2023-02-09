@@ -42,6 +42,7 @@ Table of Contents
 > If no argument is passed it shows the entire config.
 To specify nested values use a dot (e.g. `compiler-options.lua`).
 - `<value>` One or more values, e.g. `src compiler-options.lua`.
+- `--generate -g` Automatically generate a default config.
 
 
 #### **`build`** Builds the project by reading values from config or CLI.
@@ -114,10 +115,10 @@ The following keys with the following types can be configured:
 
 # API
 
-_* It is advised to use 2 or 4 spaces insted of a tab *_
 - **`thyme.2spaces`** A constant, `"  "`
 - **`thyme.4spaces`** A constant, `"    "`
 - **`thyme.tab`** A constant, `"t"`
+> _It is advised to use 2 or 4 spaces insted of a tab, see [Fennel style recommendations on spacing](https://fennel-lang.org/style%23spacing/)._
 - **`thyme.build_dir`** The build directory.
 - **`thyme.source_dir`** The source directory.
 - \(**0.3.0**\) `define-cli`* Defines a CLI interface for the buildfile

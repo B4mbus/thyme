@@ -100,10 +100,10 @@ ___
 
 
 * API
-  /* It is advised to use 2 or 4 spaces insted of a tab */
   - *`thyme.2spaces`* A constant, `"  "`
   - *`thyme.4spaces`* A constant, `"    "`
   - *`thyme.tab`* A constant, `"\t"`
+  > /It is advised to use 2 or 4 spaces insted of a tab, see {https://fennel-lang.org/style#spacing/}[Fennel style recommendations on spacing]./
   - *`thyme.build_dir`* The build directory.
   - *`thyme.source_dir`* The source directory.
   - \(*0.3.0*\) `define-cli`* Defines a CLI interface for the buildfile
