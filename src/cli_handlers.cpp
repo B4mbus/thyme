@@ -26,6 +26,7 @@ auto extract_versions_from_str(std::string_view tab_delimited_string) {
 }
 
 auto extract_output_from_command(auto cmd) {
+  // TODO: implement timeout and extract to a class handling both stdout and stderr
   auto proc_output = std::string();
   auto proc_latch = std::latch(1);
 
