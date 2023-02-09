@@ -1,3 +1,7 @@
+#include <string_view>
+
+#include <process.hpp>
+
 #include "thyme/synchronized_process.hpp"
 
 namespace {
