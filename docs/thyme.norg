@@ -43,6 +43,7 @@ ___
      > If no argument is passed it shows the entire config.
        To specify nested values use a dot (e.g. `compiler-options.lua`).
      - `<value>` One or more values, e.g. `src compiler-options.lua`.
+     - `--generate -g` Automatically generate a default config.
 
 **** *`build`* Builds the project by reading values from config or CLI.
      > *This is closely related to the config itself, every field can be overriden from the CLI (unless `--prefer-config` is set).
