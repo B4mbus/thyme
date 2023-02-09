@@ -1,5 +1,16 @@
 #include "thyme/synchronized_process.hpp"
 
+namespace {
+
+auto create_output_callback(auto& latch, auto& output_str) {
+  return [&latch, &output_str](char const* bytes, std::size_t n) {
+    output_str.append(std::string_view(bytes, n));
+    latch.count_down();
+  };
+}
+
+} // namespace
+
 namespace thyme {
 
 auto SynchronizedProcess::wait() -> void {
@@ -14,13 +25,6 @@ auto SynchronizedProcess::wait_on_stdout() -> void {
 auto SynchronizedProcess::wait_on_stderr() -> void {
   stderr_latch.wait();
 };
-
-auto SynchronizedProcess::create_output_callback(auto& latch, auto& output_str) {
-  return [&latch, &output_str](char const* bytes, std::size_t n) {
-    output_str.append(std::string_view(bytes, n));
-    latch.count_down();
-  };
-}
 
 auto SynchronizedProcess::start_process() -> TinyProcessLib::Process {
   return TinyProcessLib::Process(

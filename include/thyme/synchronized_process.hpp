@@ -24,8 +24,6 @@ public:
   std::string stderr;
 
 private:
-  auto create_output_callback(auto& latch, auto& output_str);
-
   auto start_process() -> TinyProcessLib::Process;
 
   std::string command;
