@@ -64,7 +64,7 @@ auto handle_version(argparse::ArgumentParser const& subcommand) -> void {
 
   if(include_fennel or include_lua) {
     auto const version_extraction_cmd = R"VERSION(
-      fennel -e "(print (. (require :fennel) :version) (. (icollect [string (string.gmatch \"Lua 5.4\" :%S+)] (if (~= string :Lua) string)) 1))"
+      fennel -e "(print (. (require :fennel) :version) (. (icollect [string (string.gmatch _VERSION :%S+)] (if (~= string :Lua) string)) 1))"
     )VERSION";
 
     auto const cmd_output = extract_output_from_command(version_extraction_cmd);
