@@ -4,38 +4,31 @@
 
 #include "thyme/synchronized_process.hpp"
 
-namespace {
+namespace thyme {
 
-auto create_output_callback(auto& latch, auto& output_str) {
-  return [&latch, &output_str](char const* bytes, std::size_t n) {
+auto SynchronizedProcess::create_output_callback(std::string& output_str) {
+  return [this, &output_str](char const* bytes, std::size_t n) {
     output_str.append(std::string_view(bytes, n));
-    latch.count_down();
+    process_latch.count_down();
   };
 }
 
-} // namespace
+auto SynchronizedProcess::wait() -> CommandOutput {
+  process_latch.wait();
 
-namespace thyme {
-
-auto SynchronizedProcess::wait() -> void {
-  wait_on_stdout();
-  wait_on_stderr();
+  return {
+    .stdout = std::move(stdout),
+    .stderr = std::move(stderr),
+    .exit_status = process.get_exit_status()
+  };
 };
 
-auto SynchronizedProcess::wait_on_stdout() -> void {
-  stdout_latch.wait();
-};
-
-auto SynchronizedProcess::wait_on_stderr() -> void {
-  stderr_latch.wait();
-};
-
-auto SynchronizedProcess::start_process() -> TinyProcessLib::Process {
+auto SynchronizedProcess::start_process(std::string command) -> TinyProcessLib::Process {
   return TinyProcessLib::Process(
     command,
     "",
-    create_output_callback(stdout_latch, stdout),
-    create_output_callback(stderr_latch, stderr)
+    create_output_callback(stdout),
+    create_output_callback(stderr)
   );
 };
 

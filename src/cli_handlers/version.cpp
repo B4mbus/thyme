@@ -28,10 +28,10 @@ auto versions_from_str(std::string_view tab_delimited_string) {
 
 auto output_from_command(auto cmd) {
   auto proc = thyme::SynchronizedProcess(cmd);
-  proc.wait_on_stdout();
-  std::erase(proc.stdout, '\n');
+  auto output = proc.wait();
+  std::erase(output.stdout, '\n');
 
-  return proc.stdout;
+  return output.stdout;
 }
 
 } // namespace

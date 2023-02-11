@@ -13,23 +13,24 @@ namespace thyme {
 class SynchronizedProcess {
 public:
   SynchronizedProcess(std::string command)
-    : command(std::move(command)),
-      process(start_process()) {}
+    : process(start_process(std::move(command))) {}
 
-  auto wait_on_stdout() -> void;
-  auto wait_on_stderr() -> void;
-  auto wait() -> void;
+  struct CommandOutput {
+    std::string stdout;
+    std::string stderr;
+    int exit_status;
+  };
+
+  auto wait() -> CommandOutput;
+
+private:
+  auto start_process(std::string command) -> TinyProcessLib::Process;
+  auto create_output_callback(std::string& output_str);
 
   std::string stdout;
   std::string stderr;
 
-private:
-  auto start_process() -> TinyProcessLib::Process;
-
-  std::string command;
-
-  std::latch stdout_latch = std::latch(1);
-  std::latch stderr_latch = std::latch(1);
+  std::latch process_latch = std::latch(1);
 
   TinyProcessLib::Process process;
 };
