@@ -1,9 +1,9 @@
 #include "thyme/version.hpp"
 
-namespace thyme::meta {
+namespace thyme::gen {
 
 auto version() noexcept -> char const* {
   return "@VCS_TAG@";
 }
 
-} // namespace thyme::meta
+} // namespace thyme::gen

@@ -1,7 +1,7 @@
 #pragma once
 
-namespace thyme::meta {
+namespace thyme::gen {
 
 auto version() noexcept -> char const*;
 
-} // namespace thyme::meta
+} // namespace thyme::gen

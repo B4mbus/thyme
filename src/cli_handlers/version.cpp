@@ -47,7 +47,7 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
     );
   };
 
-  print_version("Thyme", thyme::meta::version(), fg(fmt::color::light_sea_green));
+  print_version("Thyme", thyme::gen::version(), fg(fmt::color::light_sea_green));
 
   auto const include_fennel = not subcommand.is_used("--no-fennel");
   auto const include_lua = not subcommand.is_used("--no-lua");

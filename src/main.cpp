@@ -8,7 +8,7 @@
 auto main(int argc, char** argv) -> int {
   namespace ap = argparse;
 
-  auto program = ap::ArgumentParser("thyme", thyme::meta::version(), ap::default_arguments::help);
+  auto program = ap::ArgumentParser("thyme", thyme::gen::version(), ap::default_arguments::help);
 
   auto version_subcommand = ap::ArgumentParser("version", "", ap::default_arguments::help);
   version_subcommand.add_description("Displays thyme's, fennel's and lua's version if it can find one.");
