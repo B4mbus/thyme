@@ -18,11 +18,13 @@ version_file = vcs_tag(
 cmake = import('cmake')
 
 tiny_process_lib = cmake.subproject('tiny-process-lib')
+expected = cmake.subproject('expected')
 
 local_deps = [
   dependency('fmt', required: true),
   dependency('argparse', required: true),
-  tiny_process_lib.dependency('tiny-process-library')
+  tiny_process_lib.dependency('tiny-process-library'),
+  expected.dependency('expected')
 ]
 
 compilation_options = [
