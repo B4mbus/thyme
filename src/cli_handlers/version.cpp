@@ -3,7 +3,6 @@
 #include <utility>
 #include <string>
 #include <chrono>
-#include <latch>
 
 #include <fmt/format.h>
 #include <fmt/color.h>
@@ -12,13 +11,15 @@
 
 #include <process.hpp>
 
+#include <tl/expected.hpp>
+
 #include "thyme/synchronized_process.hpp"
 #include "thyme/cli_handlers.hpp"
 #include "thyme/version.hpp"
 
 namespace {
 
-auto versions_from_str(std::string_view tab_delimited_string) {
+auto split_by_tab(std::string_view tab_delimited_string) {
   auto const tab_index = tab_delimited_string.find('\t');
 
   auto const first = tab_delimited_string.substr(0, tab_index);
@@ -35,7 +36,54 @@ auto output_from_command(auto cmd) {
 
   std::erase(output.stdout, '\n');
 
-  return output.stdout;
+  return output;
+}
+
+enum class InvocationError {
+  TimedOut,
+  NonZeroExitCode
+};
+
+using VersionInfo = std::pair<std::string, std::string>;
+
+auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationError> {
+  auto const version_extraction_script = R"fennel(
+    (fn fst [elems] (. elems 1))
+    (fn snd [elems] (. elems 2))
+
+    (fn split-by-space [string]
+      (icollect [word (string.gmatch string :%S+)] word))
+
+    (fn luajit-version []
+      (-?>
+        _G.jit
+        (. :version)
+        (split-by-space)
+        (fst)))
+
+    (fn lua-version []
+      (->
+        _VERSION
+        (split-by-space)
+        (snd)))
+
+    (print
+      (. (require :fennel) :version)
+      (or (luajit-version) (lua-version)))
+    )fennel";
+
+  auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
+
+  auto const invocation_result = output_from_command(version_extraction_cmd);
+
+  if(invocation_result.exit_status != 0)
+    return tl::unexpected { InvocationError::NonZeroExitCode };
+
+  if(invocation_result.timed_out)
+    return tl::unexpected { InvocationError::TimedOut };
+
+  auto const [fennel_version, lua_version] = split_by_tab(invocation_result.stdout);
+  return { tl::in_place, fennel_version, lua_version };
 }
 
 } // namespace
@@ -57,41 +105,21 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
   auto const include_lua = not subcommand.is_used("--no-lua");
 
   if(include_fennel or include_lua) {
-    auto const version_extraction_script = R"fennel(
-      (fn fst [elems] (. elems 1))
-      (fn snd [elems] (. elems 2))
-
-      (fn split-by-space [string]
-        (icollect [word (string.gmatch string :%S+)] word))
-
-      (fn luajit-version []
-        (-?>
-          _G.jit
-          (. :version)
-          (split-by-space)
-          (fst)))
-
-      (fn lua-version []
-        (->
-          _VERSION
-          (split-by-space)
-          (snd)))
-
-      (print
-        (. (require :fennel) :version)
-        (or (luajit-version) (lua-version)))
-    )fennel";
-
-    auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
-
-    auto const cmd_output = output_from_command(version_extraction_cmd);
-    auto const [fennel_version, lua_version] = versions_from_str(cmd_output);
+    auto const version_info = get_fennel_and_lua_version_info();
 
     if(include_fennel) {
-      print_version("Fennel", fennel_version, fg(fmt::color::light_green));
+      if(version_info) {
+        print_version("Fennel", version_info.value().first, fg(fmt::color::light_green));
+      } else {
+        // TODO: handle error
+      }
     }
     if(include_lua) {
-      print_version("Lua", lua_version, fg(fmt::color::blue));
+      if(version_info) {
+        print_version("Lua", version_info.value().second, fg(fmt::color::blue));
+      } else {
+        // TODO: handle error
+      }
     }
   }
 }
