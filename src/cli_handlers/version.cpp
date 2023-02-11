@@ -2,6 +2,7 @@
 #include <ranges>
 #include <utility>
 #include <string>
+#include <chrono>
 #include <latch>
 
 #include <fmt/format.h>
@@ -27,8 +28,11 @@ auto versions_from_str(std::string_view tab_delimited_string) {
 }
 
 auto output_from_command(auto cmd) {
+  using namespace std::chrono_literals;
+
   auto proc = thyme::SynchronizedProcess(cmd);
-  auto output = proc.wait();
+  auto output = proc.wait(300ms);
+
   std::erase(output.stdout, '\n');
 
   return output.stdout;
