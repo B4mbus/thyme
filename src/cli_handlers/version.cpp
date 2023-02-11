@@ -17,7 +17,7 @@
 
 namespace {
 
-auto extract_versions_from_str(std::string_view tab_delimited_string) {
+auto versions_from_str(std::string_view tab_delimited_string) {
   auto const tab_index = tab_delimited_string.find('\t');
 
   auto const first = tab_delimited_string.substr(0, tab_index);
@@ -26,7 +26,7 @@ auto extract_versions_from_str(std::string_view tab_delimited_string) {
   return std::pair(first, second);
 }
 
-auto extract_output_from_command(auto cmd) {
+auto output_from_command(auto cmd) {
   auto proc = thyme::SynchronizedProcess(cmd);
   proc.wait_on_stdout();
   std::erase(proc.stdout, '\n');
@@ -80,8 +80,8 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
 
     auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
 
-    auto const cmd_output = extract_output_from_command(version_extraction_cmd);
-    auto const [fennel_version, lua_version] = extract_versions_from_str(cmd_output);
+    auto const cmd_output = output_from_command(version_extraction_cmd);
+    auto const [fennel_version, lua_version] = versions_from_str(cmd_output);
 
     if(include_fennel) {
       print_version("Fennel", fennel_version, fg(fmt::color::light_green));
