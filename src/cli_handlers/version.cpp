@@ -53,9 +53,32 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
   auto const include_lua = not subcommand.is_used("--no-lua");
 
   if(include_fennel or include_lua) {
-    auto const version_extraction_cmd = R"VERSION(
-      fennel -e "(print (. (require :fennel) :version) (. (icollect [string (string.gmatch _VERSION :%S+)] (if (~= string :Lua) string)) 1))"
+    auto const version_extraction_script = R"VERSION(
+(fn fst [elems] (. elems 1))
+(fn snd [elems] (. elems 2))
+
+(fn split-by-space [string]
+  (icollect [word (string.gmatch string :%S+)] word))
+
+(fn luajit-version []
+  (-?>
+    _G.jit
+    (. :version)
+    (split-by-space)
+    (fst)))
+
+(fn lua-version []
+  (->
+    _VERSION
+    (split-by-space)
+    (snd)))
+
+(print
+  (. (require :fennel) :version)
+  (or (luajit-version) (lua-version)))
     )VERSION";
+
+    auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
 
     auto const cmd_output = extract_output_from_command(version_extraction_cmd);
     auto const [fennel_version, lua_version] = extract_versions_from_str(cmd_output);
