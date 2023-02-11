@@ -18,7 +18,7 @@ auto create_output_callback(std::string& output_str) {
 
 namespace thyme {
 
-auto SynchronizedProcess::wait(Millis timeout) -> CommandOutput {
+auto SynchronizedProcess::wait(Millis timeout) -> CommandExecutionResult {
   using Clock = std::chrono::steady_clock;
 
   auto timed_out = false;

@@ -16,14 +16,14 @@ public:
   SynchronizedProcess(std::string command)
     : process(start_process(std::move(command))) {}
 
-  struct CommandOutput {
+  struct CommandExecutionResult {
     std::string stdout;
     std::string stderr;
     bool timed_out = false;
     int exit_status = -1;
   };
 
-  auto wait(Millis timeout = Millis::max()) -> CommandOutput;
+  auto wait(Millis timeout = Millis::max()) -> CommandExecutionResult;
 
 private:
   auto start_process(std::string command) -> TinyProcessLib::Process;
