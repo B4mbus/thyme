@@ -4,7 +4,7 @@ description: Description of thyme's CLI interface, config and roadmap
 authors: B4mbus (Daniel Zaradny)
 categories: docs
 created: 2023-02-07
-updated: 2023-02-09
+updated: 2023-02-13
 version: 0.1.0
 @end
 
@@ -68,6 +68,7 @@ ___
      > If no action is specified and thyme is run just with this argument the argument is going to get passed anyway (e.g. for cleaning, `thyme -- stuff`)
 
 
+
 * The config
   > The config will be written as a fennel file, the filename will be `thyme.fnl`, further referred to as **buildfile**.
     Syntax: `name: type [default value]`, not everything has a default value.
@@ -111,23 +112,21 @@ ___
 * Roadmap
   > /_Underlined_ list items are for consideration./
 
-** *0.2.0*:
+** *0.1.0*:
    - basic functionalities (`thyme init/config/build/run/help/version`)
    - config support
    - basic build api
-
-** *0.3.0*:
-   - more advanced build api (custom cli parser options)
    - fish/bash/zsh completion
+   - some CI utilities so that it's easy to use it in CI
+
+** *0.2.0*:
+   - more advanced build api (custom cli parser options)
    - logging
    - `thyme watch` (watches fileystem modifications and runs certain commands on them e.g. `thyme watch build`)
 
-** *0.4.0*:
+** *0.3.0*:
    - `thyme test`?
-   - `thyme compile` (uses `--compile-binary` to compile a project)?
+   - _`thyme compile` (uses `--compile-binary` to compile a project)_
 
-** *0.5.0*:
+** *0.4.0*:
    - dependency management
-
-** *other*:
-   - some CI utilities so that it's easy to use it in CI

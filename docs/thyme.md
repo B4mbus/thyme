@@ -129,32 +129,28 @@ The following keys with the following types can be configured:
 > _<u>Underlined</u> list items are for consideration._
 
 
-## **0.2.0**:
+## **0.1.0**:
 
 - basic functionalities (`thyme init/config/build/run/help/version`)
 - config support
 - basic build api
+- fish/bash/zsh completion
+- some CI utilities so that it's easy to use it in CI
 
 
-## **0.3.0**:
+## **0.2.0**:
 
 - more advanced build api (custom cli parser options)
-- fish/bash/zsh completion
 - logging
 - `thyme watch` (watches fileystem modifications and runs certain commands on them e.g. `thyme watch build`)
 
 
-## **0.4.0**:
+## **0.3.0**:
 
 - `thyme test`?
-- `thyme compile` (uses `--compile-binary` to compile a project)?
+- <u>`thyme compile` (uses `--compile-binary` to compile a project)</u>
 
 
-## **0.5.0**:
+## **0.4.0**:
 
 - dependency management
-
-
-## **other**:
-
-- some CI utilities so that it's easy to use it in CI
