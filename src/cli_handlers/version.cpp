@@ -44,7 +44,14 @@ enum class InvocationError {
   NonZeroExitCode
 };
 
-using VersionInfo = std::pair<std::string, std::string>;
+struct VersionInfo {
+  VersionInfo(std::string fennel, std::string lua)
+    : fennel_version(std::move(fennel)),
+      lua_version(std::move(lua)) {}
+
+  std::string fennel_version;
+  std::string lua_version;
+};
 
 auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationError> {
   auto const version_extraction_script = R"fennel(
@@ -82,7 +89,8 @@ auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationEr
   if(invocation_result.timed_out)
     return tl::unexpected { InvocationError::TimedOut };
 
-  return { tl::in_place, split_by_tab(invocation_result.stdout) };
+  auto const [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
+  return { tl::in_place, std::string(fennel_ver), std::string(lua_ver) };
 }
 
 } // namespace
@@ -108,14 +116,14 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
 
     if(include_fennel) {
       if(version_info) {
-        print_version("Fennel", version_info.value().first, fg(fmt::color::light_green));
+        print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
       } else {
         // TODO: handle error
       }
     }
     if(include_lua) {
       if(version_info) {
-        print_version("Lua", version_info.value().second, fg(fmt::color::blue));
+        print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
       } else {
         // TODO: handle error
       }
