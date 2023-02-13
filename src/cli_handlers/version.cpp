@@ -48,8 +48,8 @@ using VersionInfo = std::pair<std::string, std::string>;
 
 auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationError> {
   auto const version_extraction_script = R"fennel(
-    (fn fst [elems] (. elems 1))
-    (fn snd [elems] (. elems 2))
+    (fn first [elems] (. elems 1))
+    (fn second [elems] (. elems 2))
 
     (fn split-by-space [string]
       (icollect [word (string.gmatch string :%S+)] word))
@@ -59,13 +59,13 @@ auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationEr
         _G.jit
         (. :version)
         (split-by-space)
-        (fst)))
+        (first)))
 
     (fn lua-version []
       (->
         _VERSION
         (split-by-space)
-        (snd)))
+        (second)))
 
     (print
       (. (require :fennel) :version)
