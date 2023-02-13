@@ -82,8 +82,7 @@ auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationEr
   if(invocation_result.timed_out)
     return tl::unexpected { InvocationError::TimedOut };
 
-  auto const [fennel_version, lua_version] = split_by_tab(invocation_result.stdout);
-  return { tl::in_place, fennel_version, lua_version };
+  return { tl::in_place, split_by_tab(invocation_result.stdout) };
 }
 
 } // namespace
