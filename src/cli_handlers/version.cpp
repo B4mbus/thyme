@@ -41,7 +41,7 @@ struct InvocationError {
   std::string stderr;
   int value;
 
-  enum {
+  enum Reason {
     TimedOut,
     NonZeroExitCode
   } reason;
