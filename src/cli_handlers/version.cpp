@@ -102,19 +102,12 @@ template<>
 struct fmt::formatter<InvocationError::Reason> : formatter<std::string_view> {
   template<typename FormatContext>
   auto format(InvocationError::Reason reason, FormatContext& ctx) {
-    auto name = std::string_view();
     using enum InvocationError::Reason;
 
     switch(reason) {
-      case TimedOut:
-        name = "TimedOut";
-        break;
-      case NonZeroExitCode:
-        name = "NonZeroExitCode";
-        break;
+      case TimedOut: return fmt::format_to(ctx.out(), "TimedOut");
+      case NonZeroExitCode: return fmt::format_to(ctx.out(), "NonZeroExitCode");
     }
-
-    return fmt::formatter<std::string_view>::format(name, ctx);
   }
 };
 
