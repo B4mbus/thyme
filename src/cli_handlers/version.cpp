@@ -28,11 +28,9 @@ auto split_by_tab(std::string_view tab_delimited_string) {
   return std::pair(first, second);
 }
 
-auto output_from_command(auto cmd) {
-  using namespace std::chrono_literals;
-
+auto output_from_command(auto cmd, thyme::SynchronizedProcess::Millis timeout) {
   auto proc = thyme::SynchronizedProcess(cmd);
-  auto output = proc.wait(300ms);
+  auto output = proc.wait(timeout);
 
   std::erase(output.stdout, '\n');
 
@@ -58,7 +56,7 @@ struct VersionInfo {
   std::string lua_version;
 };
 
-auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationError> {
+auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout) -> tl::expected<VersionInfo, InvocationError> {
   auto const version_extraction_script = R"fennel(
     (fn first [elems] (. elems 1))
     (fn second [elems] (. elems 2))
@@ -86,7 +84,7 @@ auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationEr
 
   auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
 
-  auto invocation_result = output_from_command(version_extraction_cmd);
+  auto invocation_result = output_from_command(version_extraction_cmd, timeout);
 
   if(invocation_result.exit_status != 0)
     return tl::unexpected(InvocationError { std::move(invocation_result.stderr), invocation_result.exit_status, InvocationError::NonZeroExitCode });
@@ -117,7 +115,8 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
   auto const include_lua = not subcommand.is_used("--no-lua");
 
   if(include_fennel or include_lua) {
-    auto const version_info = get_fennel_and_lua_version_info();
+    using namespace std::chrono_literals;
+    auto const version_info = get_fennel_and_lua_version_info(300ms);
 
     if(include_fennel) {
       if(version_info) {
