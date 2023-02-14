@@ -16,6 +16,7 @@
 #include "thyme/synchronized_process.hpp"
 #include "thyme/cli_handlers.hpp"
 #include "thyme/version.hpp"
+#include "thyme/error.hpp"
 
 namespace {
 
@@ -96,6 +97,19 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
   return { tl::in_place, std::string(fennel_ver), std::string(lua_ver) };
 }
 
+auto print_invocation_error(auto thing, auto reason, auto value) {
+  auto const print = [value](auto const& msg) {
+    fmt::print("{}", thyme::Error(fmt::runtime(msg), value));
+  };
+
+  switch(reason) {
+    case InvocationError::TimedOut:
+      return print(fmt::format("While trying to get {}'s version. Process timed out after {{}}ms.", thing));
+    case InvocationError::NonZeroExitCode:
+      return print(fmt::format("While trying to get {}'s version. Process exited with exit code {{}}.", thing));
+  }
+}
+
 } // namespace
 
 template<>
@@ -135,16 +149,16 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
       if(version_info) {
         print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
       } else {
-        auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason, vers.value, vers.stderr);
+        auto const& info = version_info.error();
+        print_invocation_error("fennel", info.reason, info.value);
       }
     }
     if(include_lua) {
       if(version_info) {
         print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
       } else {
-        auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason, vers.value, vers.stderr);
+        auto const& info = version_info.error();
+        print_invocation_error("lua", info.reason, info.value);
       }
     }
   }
