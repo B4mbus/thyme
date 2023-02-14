@@ -39,9 +39,14 @@ auto output_from_command(auto cmd) {
   return output;
 }
 
-enum class InvocationError {
-  TimedOut,
-  NonZeroExitCode
+struct InvocationError {
+  std::string stderr;
+  int value;
+
+  enum {
+    TimedOut,
+    NonZeroExitCode
+  } type;
 };
 
 struct VersionInfo {
@@ -81,13 +86,13 @@ auto get_fennel_and_lua_version_info() -> tl::expected<VersionInfo, InvocationEr
 
   auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
 
-  auto const invocation_result = output_from_command(version_extraction_cmd);
+  auto invocation_result = output_from_command(version_extraction_cmd);
 
   if(invocation_result.exit_status != 0)
-    return tl::unexpected { InvocationError::NonZeroExitCode };
+    return tl::unexpected(InvocationError { std::move(invocation_result.stderr), invocation_result.exit_status, InvocationError::NonZeroExitCode });
 
   if(invocation_result.timed_out)
-    return tl::unexpected { InvocationError::TimedOut };
+    return tl::unexpected(InvocationError { std::move(invocation_result.stderr), 300, InvocationError::TimedOut });
 
   auto const [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
   return { tl::in_place, std::string(fennel_ver), std::string(lua_ver) };
@@ -118,14 +123,16 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
       if(version_info) {
         print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
       } else {
-        // TODO: handle error
+        auto const& vers = version_info.error();
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.type == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
       }
     }
     if(include_lua) {
       if(version_info) {
         print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
       } else {
-        // TODO: handle error
+        auto const& vers = version_info.error();
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.type == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
       }
     }
   }
