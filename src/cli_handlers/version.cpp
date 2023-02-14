@@ -44,7 +44,7 @@ struct InvocationError {
   enum {
     TimedOut,
     NonZeroExitCode
-  } type;
+  } reason;
 };
 
 struct VersionInfo {
@@ -123,7 +123,7 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
         print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
       } else {
         auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.type == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
       }
     }
     if(include_lua) {
@@ -131,7 +131,7 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
         print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
       } else {
         auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.type == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
       }
     }
   }
