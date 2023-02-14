@@ -98,6 +98,26 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
 
 } // namespace
 
+template<>
+struct fmt::formatter<InvocationError::Reason> : formatter<std::string_view> {
+  template<typename FormatContext>
+  auto format(InvocationError::Reason reason, FormatContext& ctx) {
+    auto name = std::string_view();
+    using enum InvocationError::Reason;
+
+    switch(reason) {
+      case TimedOut:
+        name = "TimedOut";
+        break;
+      case NonZeroExitCode:
+        name = "NonZeroExitCode";
+        break;
+    }
+
+    return fmt::formatter<std::string_view>::format(name, ctx);
+  }
+};
+
 namespace thyme::cli_handlers {
 
 auto version(argparse::ArgumentParser const& subcommand) -> void {
@@ -123,7 +143,7 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
         print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
       } else {
         auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason, vers.value, vers.stderr);
       }
     }
     if(include_lua) {
@@ -131,7 +151,7 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
         print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
       } else {
         auto const& vers = version_info.error();
-        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason == InvocationError::NonZeroExitCode ? "NonZeroExitCode" : "TimedOut", vers.value, vers.stderr);
+        fmt::print("Error: {} Value: {} Stderr: \"{}\"", vers.reason, vers.value, vers.stderr);
       }
     }
   }
