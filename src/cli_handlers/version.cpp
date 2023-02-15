@@ -107,7 +107,7 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
     );
   }
 
-  auto const [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
+  auto [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
   return { tl::in_place, fennel_ver, lua_ver };
 }
 
