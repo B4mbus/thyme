@@ -144,7 +144,7 @@ The following keys with the following types can be configured:
 
 ## **0.3.0**:
 
-- `thyme test`?
+- <u>`thyme test`</u>
 - <u>`thyme compile` (uses `--compile-binary` to compile a project)</u>
 
 
