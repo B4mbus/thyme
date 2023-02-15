@@ -69,14 +69,17 @@ If not argument is given it displays shorter help for all commands.
 - `--no-lua -l` Don't display lua's version
 
 
-#### **`debug`** ?
+#### **`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).
 
-> ?
+> This feature requires `gh` installed and user being authorized.
+- `--just-template -j` Do not create issue with `gh`, just print the template.
+- `--clip -c` Copy the template to clipboard.
 
 
 #### \(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).
 
 > If no action is specified and thyme is run just with this argument the argument is going to get passed anyway (e.g. for cleaning, `thyme -- stuff`)
+
 
 
 

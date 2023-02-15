@@ -4,7 +4,7 @@ description: Description of thyme's CLI interface, config and roadmap
 authors: B4mbus (Daniel Zaradny)
 categories: docs
 created: 2023-02-07
-updated: 2023-02-14
+updated: 2023-02-15
 version: 0.1.0
 @end
 
@@ -61,8 +61,10 @@ ___
      - `--no-fennel -f` Don't display fennel's version
      - `--no-lua -l` Don't display lua's version
 
-**** *`debug`* ?
-     > ?
+**** *`issue`* Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).
+     > This feature requires `gh` installed and user being authorized.
+     - `--just-template -j` Do not create issue with `gh`, just print the template.
+     - `--clip -c` Copy the template to clipboard.
 
 **** \(*0.3.0*\) *`--`* Everything after `--` will be passed to the *buildfile* if present (see `define-cli?`).
      > If no action is specified and thyme is run just with this argument the argument is going to get passed anyway (e.g. for cleaning, `thyme -- stuff`)
