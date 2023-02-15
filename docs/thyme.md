@@ -7,16 +7,16 @@ Table of Contents
 • [**`config <value> <value> ...`** Displays one value or the entire config.](#config-value-value-displays-one-value-or-the-entire-config)
 • [**`build`** Builds the project by reading values from config or CLI.](#build-builds-the-project-by-reading-values-from-config-or-cli)
 • [**`run`** Run the entire project.](#run-run-the-entire-project)
-• [**`help <cmd>`** Displays help message or help about one command.](#help-cmd-displays-help-message-or-help-about-one-command)
-• [**`version`** Displays the thyme version and fennel version if it can find one.](#version-displays-the-thyme-version-and-fennel-version-if-it-can-find-one)
+• [**`version`** Displays thyme's, fennel's and lua's version if it can find one.](#version-displays-thymes-fennels-and-luas-version-if-it-can-find-one)
+• [**`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).](#issue-creates-issue-pre-filled-with-debug-information-os-neovim-thyme-fennel-lua-version-logs-etc)
+• [\(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).](#030-everything-after-will-be-passed-to-the-buildfile-if-present-see-define-cli)
 • [The config](#the-config)
 • [API](#api)
 • [Roadmap](#roadmap)
+• [**0.1.0**](#010)
 • [**0.2.0**](#020)
 • [**0.3.0**](#030)
 • [**0.4.0**](#040)
-• [**0.5.0**](#050)
-• [**other**](#other)
 
 
 
@@ -55,12 +55,6 @@ If a value has been set both in the CLI and in the config there will be a warnin
 
 #### **`run`** Run the entire project.
 
-
-
-#### **`help <cmd>`** Displays help message or help about one command.
-
-If not argument is given it displays shorter help for all commands.
-- `<cmd>` Command to display help for.
 
 
 #### **`version`** Displays thyme's, fennel's and lua's version if it can find one.
@@ -134,7 +128,7 @@ The following keys with the following types can be configured:
 
 ## **0.1.0**:
 
-- basic functionalities (`thyme init/config/build/run/help/version`)
+- basic functionalities (`thyme init/config/build/run/issue/version`)
 - config support
 - basic build api
 - fish/bash/zsh completion
