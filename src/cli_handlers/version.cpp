@@ -20,7 +20,7 @@
 
 namespace {
 
-auto split_by_tab(std::string_view tab_delimited_string) {
+auto split_by_tab(std::string const& tab_delimited_string) {
   auto const tab_index = tab_delimited_string.find('\t');
 
   auto const first = tab_delimited_string.substr(0, tab_index);
@@ -94,7 +94,7 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
     return tl::unexpected(InvocationError { std::move(invocation_result.stderr), 300, InvocationError::TimedOut });
 
   auto const [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
-  return { tl::in_place, std::string(fennel_ver), std::string(lua_ver) };
+  return { tl::in_place, fennel_ver, lua_ver };
 }
 
 auto print_invocation_error(auto thing, auto reason, auto value) {
