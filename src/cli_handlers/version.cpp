@@ -91,7 +91,7 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
     return tl::unexpected(InvocationError { std::move(invocation_result.stderr), invocation_result.exit_status, InvocationError::NonZeroExitCode });
 
   if(invocation_result.timed_out)
-    return tl::unexpected(InvocationError { std::move(invocation_result.stderr), 300, InvocationError::TimedOut });
+    return tl::unexpected(InvocationError { std::move(invocation_result.stderr), static_cast<int>(timeout.count()), InvocationError::TimedOut });
 
   auto const [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
   return { tl::in_place, fennel_ver, lua_ver };
