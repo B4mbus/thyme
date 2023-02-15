@@ -111,19 +111,6 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
   return { tl::in_place, fennel_ver, lua_ver };
 }
 
-auto print_invocation_error(auto thing, auto reason, auto value) {
-  auto const print = [value](auto const& msg) {
-    fmt::print("{}", thyme::Error(fmt::runtime(msg), value));
-  };
-
-  switch(reason) {
-    case InvocationError::TimedOut:
-      return print(fmt::format("While trying to get {}'s version. Process timed out after {{}}ms.", thing));
-    case InvocationError::NonZeroExitCode:
-      return print(fmt::format("While trying to get {}'s version. Process exited with exit code {{}}.", thing));
-  }
-}
-
 } // namespace
 
 template<>
@@ -166,11 +153,15 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
         print_version("Lua", version_info.lua_version, fg(fmt::color::blue));
     };
 
-    auto const print_errors = [include_fennel, include_lua](InvocationError const& error) {
-      if(include_fennel)
-        print_invocation_error("fennel", error.reason, error.value);
-      if(include_lua)
-        print_invocation_error("lua", error.reason, error.value);
+    auto const print_errors = [](InvocationError const& error) {
+      switch(error.reason) {
+        case InvocationError::TimedOut:
+          fmt::print("{}", thyme::Error("While trying to get version info. Process timed out after {}ms.", error.value));
+          break;
+        case InvocationError::NonZeroExitCode:
+          fmt::print("{}", thyme::Error("While trying to get version info. Process exited with exit code {}.", error.value));
+          break;
+      }
     };
 
     version_info
