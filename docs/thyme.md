@@ -65,8 +65,8 @@ If not argument is given it displays shorter help for all commands.
 
 #### **`version`** Displays thyme's, fennel's and lua's version if it can find one.
 
-- `--no-fennel -f` Don't display fennel's version
-- `--no-lua -l` Don't display lua's version
+- `--no-fennel -f` Don't display fennel's version.
+- `--no-lua -l` Don't display lua's version.
 
 
 #### **`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).
