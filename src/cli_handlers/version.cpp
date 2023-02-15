@@ -159,22 +159,23 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
     using namespace std::chrono_literals;
     auto const version_info = get_fennel_and_lua_version_info(300ms);
 
-    if(include_fennel) {
-      if(version_info) {
-        print_version("Fennel", version_info.value().fennel_version, fg(fmt::color::light_green));
-      } else {
-        auto const& info = version_info.error();
-        print_invocation_error("fennel", info.reason, info.value);
-      }
-    }
-    if(include_lua) {
-      if(version_info) {
-        print_version("Lua", version_info.value().lua_version, fg(fmt::color::blue));
-      } else {
-        auto const& info = version_info.error();
-        print_invocation_error("lua", info.reason, info.value);
-      }
-    }
+    auto const print_versions = [include_fennel, include_lua, print_version](VersionInfo const& version_info) {
+      if(include_fennel)
+        print_version("Fennel", version_info.fennel_version, fg(fmt::color::light_green));
+      if(include_lua)
+        print_version("Lua", version_info.lua_version, fg(fmt::color::blue));
+    };
+
+    auto const print_errors = [include_fennel, include_lua](InvocationError const& error) {
+      if(include_fennel)
+        print_invocation_error("fennel", error.reason, error.value);
+      if(include_lua)
+        print_invocation_error("lua", error.reason, error.value);
+    };
+
+    version_info
+      .map(print_versions)
+      .map_error(print_errors);
   }
 }
 
