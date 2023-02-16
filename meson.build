@@ -9,9 +9,10 @@ if(meson.get_compiler('cpp').get_id() == 'msvc') # have to do that to avoid MSVC
   add_project_arguments('-DNOMINMAX', language: 'cpp')
 endif
 
+# Generate files
 version_file = vcs_tag(
   command: ['git', 'describe', '--tags', '--always', '--abbrev=0'],
-  input: 'template/generated.cpp.in',
+  input: 'template/version.cpp.in',
   output: 'version.cpp'
 )
 
