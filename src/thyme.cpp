@@ -3,7 +3,7 @@
 #include <argparse/argparse.hpp>
 
 #include "thyme/cli_handlers.hpp"
-#include "thyme/version.hpp"
+#include "thyme/generated/version.hpp"
 #include "thyme/thyme.hpp"
 
 namespace thyme {

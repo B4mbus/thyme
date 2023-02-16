@@ -14,9 +14,9 @@
 #include <tl/expected.hpp>
 
 #include "thyme/synchronized_process.hpp"
-#include "thyme/fennel_scripts.hpp"
+#include "thyme/generated/fennel_scripts.hpp"
+#include "thyme/generated/version.hpp"
 #include "thyme/cli_handlers.hpp"
-#include "thyme/version.hpp"
 #include "thyme/error.hpp"
 
 namespace {
