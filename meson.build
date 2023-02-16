@@ -16,6 +16,16 @@ version_file = vcs_tag(
   output: 'version.cpp'
 )
 
+fs = import('fs')
+
+fennel_scripts_file = configure_file(
+  configuration: {
+    'FENNEL_VERSION_EXTRACTION_SCRIPT': fs.read('fnl/version_extraction.fnl').strip()
+  },
+  input: 'template/fennel_scripts.cpp.in',
+  output: 'fennel_scripts.cpp'
+)
+
 cmake = import('cmake')
 
 tiny_process_lib = cmake.subproject('tiny-process-lib')
@@ -43,7 +53,7 @@ sources = files(
 )
 
 thyme_dep = declare_dependency(
-  sources: [sources, version_file],
+  sources: [sources, version_file, fennel_scripts_file],
   dependencies: local_deps,
   include_directories: include_dirs,
 )

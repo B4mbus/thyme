@@ -14,6 +14,7 @@
 #include <tl/expected.hpp>
 
 #include "thyme/synchronized_process.hpp"
+#include "thyme/fennel_scripts.hpp"
 #include "thyme/cli_handlers.hpp"
 #include "thyme/version.hpp"
 #include "thyme/error.hpp"
@@ -58,30 +59,7 @@ struct VersionInfo {
 };
 
 auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout) -> tl::expected<VersionInfo, InvocationError> {
-  auto const version_extraction_script = R"fennel(
-    (fn first [elems] (. elems 1))
-    (fn second [elems] (. elems 2))
-
-    (fn split-by-space [string]
-      (icollect [word (string.gmatch string :%S+)] word))
-
-    (fn luajit-version []
-      (-?>
-        _G.jit
-        (. :version)
-        (split-by-space)
-        (first)))
-
-    (fn lua-version []
-      (->
-        _VERSION
-        (split-by-space)
-        (second)))
-
-    (print
-      (. (require :fennel) :version)
-      (or (luajit-version) (lua-version)))
-    )fennel";
+  auto const version_extraction_script = thyme::fnl::version_extraction();
 
   auto const version_extraction_cmd = fmt::format(R"(fennel -e "{}")", version_extraction_script);
 

@@ -1,0 +1,9 @@
+#include "thyme/fennel_scripts.hpp"
+
+namespace thyme::fnl {
+
+auto version_extraction() noexcept -> char const* {
+  return R"fennel(@FENNEL_VERSION_EXTRACTION_SCRIPT@)fennel";
+}
+
+} // namespace thyme::fnl
