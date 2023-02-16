@@ -1,3 +1,53 @@
 name: Bug Report
 description: Report an unintended behaviour
 labels: [bug]
+body:
+
+  - type: textarea
+    id: debug-info
+    attributes:
+      label: "Debug Info"
+      description: "Output of `thyme issue -j` (be sure to run it in the project directory to obtain all the necessary information)"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Actual behavior"
+      description: "A description of actual behavior. May include images or videos."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Expected behavior"
+      description: "A description of the behavior you expected."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Steps to reproduce"
+      description: "Please describe how we can reproduce the issue. Ideally make it the most minimal possible."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Other information"
+      description: "Other information that could be helpful with debugging."
+
+  - type: dropdown
+    id: help
+    attributes:
+      label: "Help"
+      description: "Would you be able to resolve this issue by submitting a pull request?"
+      options:
+        - "Yes"
+        - "Yes, but I don't know how to start. I would need guidance (check question below)"
+        - "No"
+
+  - type: textarea
+    attributes:
+      label: "Implementation help"
+      description: "If you selected yes in the last question please specify what you would need help with in order to implement this?"
