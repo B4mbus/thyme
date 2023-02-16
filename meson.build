@@ -11,7 +11,7 @@ endif
 
 version_file = vcs_tag(
   command: ['git', 'describe', '--tags', '--always', '--abbrev=0'],
-  input: 'template/version.cpp.in',
+  input: 'template/generated.cpp.in',
   output: 'version.cpp'
 )
 
