@@ -1,14 +1,22 @@
+#include <functional>
+#include <vector>
+
 #include <fmt/format.h>
 
 #include <argparse/argparse.hpp>
 
-#include "thyme/cli_handlers.hpp"
 #include "thyme/generated/version.hpp"
+
+#include "thyme/cli_handler.hpp"
 #include "thyme/thyme.hpp"
 
 namespace thyme {
 
 auto Thyme::run(int argc, char** argv) -> int {
+  return handle_cli(argc, argv);
+}
+
+auto Thyme::handle_cli(int argc, char** argv) -> int {
   namespace ap = argparse;
 
   auto program = ap::ArgumentParser("thyme", thyme::version(), ap::default_arguments::help);
@@ -30,15 +38,32 @@ auto Thyme::run(int argc, char** argv) -> int {
 
   program.add_subparser(version_subcommand);
 
-  try {
-    program.parse_args(argc, argv);
+  auto cli_config = CLIConfig {
+    .argc = argc,
+    .argv = argv,
+    .main_parser = std::ref(program),
+    .handlers = {
+      { "version", &CLIHandler::version, std::ref(version_subcommand) } }
+  };
 
-    if(program.is_subcommand_used("version")) {
-      thyme::cli_handlers::version(version_subcommand);
-    }
+  return dispatch_handlers(cli_config);
+}
+
+auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
+  auto& main_parser = config.main_parser.get();
+
+  try {
+    main_parser.parse_args(config.argc, config.argv);
+
   } catch(std::runtime_error const& err) {
-    fmt::print("{}\n{}", err.what(), program.help().str());
+    fmt::print("{}\n{}", err.what(), main_parser.help().str());
     return -1;
+  }
+
+  auto cli_handler = CLIHandler();
+  for(auto&& [subcommand, handler_fn, parser] : config.handlers) {
+    if(main_parser.is_subcommand_used(subcommand))
+      std::invoke(handler_fn, cli_handler, parser);
   }
 
   return 0;

@@ -1,6 +1,6 @@
 #include <string_view>
-#include <ranges>
 #include <utility>
+#include <ranges>
 #include <string>
 #include <chrono>
 
@@ -13,10 +13,11 @@
 
 #include <tl/expected.hpp>
 
-#include "thyme/synchronized_process.hpp"
 #include "thyme/generated/fennel_scripts.hpp"
 #include "thyme/generated/version.hpp"
-#include "thyme/cli_handlers.hpp"
+
+#include "thyme/synchronized_process.hpp"
+#include "thyme/cli_handler.hpp"
 #include "thyme/error.hpp"
 
 namespace {
@@ -91,22 +92,9 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
 
 } // namespace
 
-template<>
-struct fmt::formatter<InvocationError::Reason> : formatter<std::string_view> {
-  template<typename FormatContext>
-  auto format(InvocationError::Reason reason, FormatContext& ctx) {
-    using enum InvocationError::Reason;
+namespace thyme {
 
-    switch(reason) {
-      case TimedOut: return fmt::format_to(ctx.out(), "TimedOut");
-      case NonZeroExitCode: return fmt::format_to(ctx.out(), "NonZeroExitCode");
-    }
-  }
-};
-
-namespace thyme::cli_handlers {
-
-auto version(argparse::ArgumentParser const& subcommand) -> void {
+auto CLIHandler::version(argparse::ArgumentParser& parser) const -> void {
   auto constexpr print_version = [](auto name, auto version, auto fg_format) {
     fmt::print(
       "{} version: {}\n",
@@ -117,8 +105,8 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
 
   print_version("Thyme", thyme::version(), fg(fmt::color::light_sea_green));
 
-  auto const include_fennel = not subcommand.is_used("--no-fennel");
-  auto const include_lua = not subcommand.is_used("--no-lua");
+  auto const include_fennel = not parser.is_used("--no-fennel");
+  auto const include_lua = not parser.is_used("--no-lua");
 
   if(include_fennel or include_lua) {
     using namespace std::chrono_literals;
@@ -148,4 +136,4 @@ auto version(argparse::ArgumentParser const& subcommand) -> void {
   }
 }
 
-} // namespace thyme::cli_handlers
+} // namespace thyme

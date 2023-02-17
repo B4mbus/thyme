@@ -47,8 +47,8 @@ include_dirs = [
 ]
 
 sources = files(
-  'src/cli_handlers/version.cpp',
   'src/synchronized_process.cpp',
+  'src/cli_handler.cpp',
   'src/thyme.cpp'
 )
 
