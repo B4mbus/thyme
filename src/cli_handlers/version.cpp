@@ -18,6 +18,7 @@
 
 #include "thyme/synchronized_process.hpp"
 #include "thyme/cli_handler.hpp"
+#include "thyme/formatted_message/messages.hpp"
 #include "thyme/error.hpp"
 
 namespace {
