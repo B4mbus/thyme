@@ -2,21 +2,21 @@
 
 
 Table of Contents
-• [The basic CLI interface](#the-basic-cli-interface)
-• [**`new <project-dir> <src> <out>`** Initializes a new fennel project.](#new-project-dir-src-out-initializes-a-new-fennel-project)
-• [**`config <value> <value> ...`** Displays one value or the entire config.](#config-value-value-displays-one-value-or-the-entire-config)
-• [**`build`** Builds the project by reading values from config or CLI.](#build-builds-the-project-by-reading-values-from-config-or-cli)
-• [**`run`** Run the entire project.](#run-run-the-entire-project)
-• [**`version`** Displays thyme's, fennel's and lua's version if it can find one.](#version-displays-thymes-fennels-and-luas-version-if-it-can-find-one)
-• [**`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).](#issue-creates-issue-pre-filled-with-debug-information-os-neovim-thyme-fennel-lua-version-logs-etc)
-• [\(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).](#030-everything-after-will-be-passed-to-the-buildfile-if-present-see-define-cli)
-• [The config](#the-config)
-• [API](#api)
-• [Roadmap](#roadmap)
-• [**0.1.0**](#010)
-• [**0.2.0**](#020)
-• [**0.3.0**](#030)
-• [**0.4.0**](#040)
+- [The basic CLI interface](#the-basic-cli-interface)
+- [**`new <project-dir> <src> <out>`** Initializes a new fennel project.](#new-project-dir-src-out-initializes-a-new-fennel-project)
+- [**`config <value> <value> ...`** Displays one value or the entire config.](#config-value-value-displays-one-value-or-the-entire-config)
+- [**`build`** Builds the project by reading values from config or CLI.](#build-builds-the-project-by-reading-values-from-config-or-cli)
+- [**`run`** Run the entire project.](#run-run-the-entire-project)
+- [**`version`** Displays thyme's, fennel's and lua's version if it can find one.](#version-displays-thymes-fennels-and-luas-version-if-it-can-find-one)
+- [**`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).](#issue-creates-issue-pre-filled-with-debug-information-os-neovim-thyme-fennel-lua-version-logs-etc)
+- [\(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).](#030-everything-after-will-be-passed-to-the-buildfile-if-present-see-define-cli)
+- [The config](#the-config)
+- [API](#api)
+- [Roadmap](#roadmap)
+- [**0.1.0**](#010)
+- [**0.2.0**](#020)
+- [**0.3.0**](#030)
+- [**0.4.0**](#040)
 
 
 
@@ -123,13 +123,12 @@ The following keys with the following types can be configured:
 
 # Roadmap
 
-> _<u>Underlined</u> list items are for consideration._
+> _<ins>Underlined</ins> list items are for consideration._
 
 
 ## **0.1.0**:
 
 - basic functionalities (`thyme init/config/build/run/issue/version`)
-- config support
 - basic build api
 - fish/bash/zsh completion
 - some CI utilities so that it's easy to use it in CI
@@ -137,17 +136,18 @@ The following keys with the following types can be configured:
 
 ## **0.2.0**:
 
-- more advanced build api (custom cli parser options)
 - logging
+- more advanced build api (custom cli parser options)
 - `thyme watch` (watches fileystem modifications and runs certain commands on them e.g. `thyme watch build`)
 
 
 ## **0.3.0**:
 
-- <u>`thyme test`</u>
-- <u>`thyme compile` (uses `--compile-binary` to compile a project)</u>
+- <ins>build logs</ins>
+- <ins>`thyme test`</ins>
+- <ins>`thyme compile` (uses `--compile-binary` to compile a project)</ins>
 
 
-## **0.4.0**:
+## **?**:
 
 - dependency management

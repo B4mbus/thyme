@@ -4,7 +4,7 @@ description: Description of thyme's CLI interface, config and roadmap
 authors: B4mbus (Daniel Zaradny)
 categories: docs
 created: 2023-02-07
-updated: 2023-02-15
+updated: 2023-02-19
 version: 0.1.0
 @end
 
@@ -112,19 +112,19 @@ ___
 
 ** *0.1.0*:
    - basic functionalities (`thyme init/config/build/run/issue/version`)
-   - config support
    - basic build api
    - fish/bash/zsh completion
    - some CI utilities so that it's easy to use it in CI
 
 ** *0.2.0*:
-   - more advanced build api (custom cli parser options)
    - logging
+   - more advanced build api (custom cli parser options)
    - `thyme watch` (watches fileystem modifications and runs certain commands on them e.g. `thyme watch build`)
 
 ** *0.3.0*:
+   - _build logs_
    - _`thyme test`_
    - _`thyme compile` (uses `--compile-binary` to compile a project)_
 
-** *0.4.0*:
+** *?*:
    - dependency management
