@@ -50,6 +50,7 @@ sources = files(
   'src/synchronized_process.cpp',
 
   'src/cli_handlers/version.cpp',
+  'src/cli_handlers/new.cpp',
 
   'src/thyme.cpp'
 )

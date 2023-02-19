@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <functional>
 #include <vector>
 
@@ -19,6 +20,7 @@ auto Thyme::run(int argc, char** argv) -> int {
 
 auto Thyme::handle_cli(int argc, char** argv) -> int {
   namespace ap = argparse;
+  namespace fs = std::filesystem;
 
   auto program = ap::ArgumentParser("thyme", thyme::version(), ap::default_arguments::help);
 
@@ -37,6 +39,28 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
     .default_value(false)
     .implicit_value(true);
 
+  auto new_subcommand = ap::ArgumentParser("new", "", ap::default_arguments::help);
+  new_subcommand.add_description("Initializes a new fennel project.");
+
+  new_subcommand
+    .add_argument("project-dir")
+    .help("Path to the project directory")
+    .default_value(fs::path("."))
+    .required();
+
+  new_subcommand
+    .add_argument("src")
+    .help("The name of the source directory ")
+    .default_value(fs::path("fnl"))
+    .required();
+
+  new_subcommand
+    .add_argument("out")
+    .help("The name of the source directory ")
+    .default_value(fs::path("lua"))
+    .required();
+
+  program.add_subparser(new_subcommand);
   program.add_subparser(version_subcommand);
 
   auto cli_config = CLIConfig {
@@ -44,7 +68,9 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
     .argv = argv,
     .main_parser = std::ref(program),
     .handlers = {
-      { "version", &CLIHandler::version_handler, std::ref(version_subcommand) } }
+      { "version", &CLIHandler::version_handler, std::ref(version_subcommand) },
+      { "new", &CLIHandler::new_handler, std::ref(new_subcommand) },
+    }
   };
 
   return dispatch_handlers(cli_config);
