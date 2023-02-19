@@ -68,6 +68,7 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
     .argv = argv,
     .main_parser = std::ref(program),
     .handlers = {
+      { "", &CLIHandler::default_handler, std::ref(program) }, // default action
       { "version", &CLIHandler::version_handler, std::ref(version_subcommand) },
       { "new", &CLIHandler::new_handler, std::ref(new_subcommand) },
     }
@@ -78,11 +79,6 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
 
 auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
   auto& main_parser = config.main_parser.get();
-
-  if(config.argc == 1) {
-    fmt::print("{}", main_parser.help().str());
-    return 0;
-  }
 
   try {
     main_parser.parse_args(config.argc, config.argv);
@@ -97,7 +93,7 @@ auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
 
   auto cli_handler = CLIHandler();
   for(auto&& [subcommand, handler_fn, parser] : config.handlers) {
-    if(main_parser.is_subcommand_used(subcommand))
+    if(subcommand.empty() or main_parser.is_subcommand_used(subcommand))
       std::invoke(handler_fn, cli_handler, parser);
   }
 

@@ -49,6 +49,7 @@ include_dirs = [
 sources = files(
   'src/synchronized_process.cpp',
 
+  'src/cli_handlers/default.cpp',
   'src/cli_handlers/version.cpp',
   'src/cli_handlers/new.cpp',
 
