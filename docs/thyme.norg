@@ -130,5 +130,5 @@ ___
    - _`thyme test`_
    - _`thyme compile` (uses `--compile-binary` to compile a project)_
 
-** *?*:
-   - dependency management
+** *0.3.0/0.4.0*:
+   - _dependency management_
