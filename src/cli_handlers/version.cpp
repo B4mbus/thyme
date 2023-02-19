@@ -47,7 +47,8 @@ struct InvocationError {
 
   enum Reason {
     TimedOut,
-    NonZeroExitCode
+    NonZeroExitCode,
+    EmptyOutput
   } reason;
 };
 
@@ -87,6 +88,15 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
     );
   }
 
+  if(invocation_result.stdout.empty()) {
+    return tl::unexpected(
+      InvocationError {
+        .stderr = std::move(invocation_result.stderr),
+        .reason = InvocationError::EmptyOutput,
+      }
+    );
+  }
+
   auto [fennel_ver, lua_ver] = split_by_tab(invocation_result.stdout);
   return { tl::in_place, fennel_ver, lua_ver };
 }
@@ -101,6 +111,11 @@ auto print_errors(InvocationError const& error) {
       thyme::error("While trying to get fennel and lua version info. Process exited with exit code {}", error.value)
         .hint("Check if the directory where the `fennel` file is located is added to path")
         .hint("Alternatively, configure path to the fennel tool in the buildfile")
+        .context("Stderr", "{}", error.stderr)
+        .write(stderr);
+      break;
+    case InvocationError::EmptyOutput:
+      thyme::error("While trying to get fennel and lua version info. The output seems to be empty")
         .context("Stderr", "{}", error.stderr)
         .write(stderr);
       break;
