@@ -129,6 +129,7 @@ auto CLIHandler::version(argparse::ArgumentParser& parser) const -> void {
         case InvocationError::NonZeroExitCode:
           thyme::error("While trying to get fennel and lua version info. Process exited with exit code {}", error.value)
             .hint("Check if the directory where the `fennel` file is located is added to path")
+            .hint("Alternatively, configure path to the fennel tool in the buildfile")
             .context("Stderr", "{}", error.stderr)
             .write(stderr);
           break;

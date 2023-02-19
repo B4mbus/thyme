@@ -65,14 +65,19 @@ struct MessageWriter<FormattedMessage<TitleStyle, BodyStyle, HintStyle, ContextS
     format_content(BodyStyle, msg.m_body);
 
     auto const context_present = not msg.m_context_body.empty();
-    auto const hint_present = not msg.m_hint_body.empty();
 
-    if(hint_present) {
-      if(context_present) continued_indent();
-      else end_indent();
+    if(not msg.hints.empty()) {
+      for(auto i = 0ULL; i < msg.hints.size(); ++i) {
+        if(context_present or i == msg.hints.size() - 1)
+          continued_indent();
+        else
+          end_indent();
 
-      format_title(HintStyle.title, msg.m_hint_title);
-      format_content(HintStyle.body, msg.m_hint_body);
+        auto const& [title, body] = msg.hints[i];
+
+        format_title(HintStyle.title, title);
+        format_content(HintStyle.body, body);
+      }
     }
 
     if(context_present) {

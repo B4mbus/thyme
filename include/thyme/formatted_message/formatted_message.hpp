@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
 #include <utility>
+#include <string>
+#include <vector>
 
 #include <fmt/format.h>
 #include <fmt/color.h>
@@ -24,14 +25,16 @@ public:
 
   template<typename... Args>
   auto hint(fmt::format_string<Args...> fmt_string, Args&&... args) {
-    m_hint_body = fmt::format(fmt_string, std::forward<Args>(args)...);
-    return *this;
+    return hint_custom_title("Hint", fmt_string, std::forward<Args>(args)...);
   }
 
   template<typename... Args>
   auto hint_custom_title(std::string title, fmt::format_string<Args...> fmt_string, Args&&... args) {
-    m_hint_title = std::move(title);
-    m_hint_body = fmt::format(fmt_string, std::forward<Args>(args)...);
+    hints.emplace_back(
+      std::move(title),
+      fmt::format(fmt_string, std::forward<Args>(args)...)
+    );
+
     return *this;
   }
 
@@ -56,8 +59,7 @@ private:
   std::string m_title;
   std::string m_body;
 
-  std::string m_hint_title = "Hint";
-  std::string m_hint_body;
+  std::vector<std::pair<std::string, std::string>> hints;
 
   std::string m_context_title = "Context";
   std::string m_context_body;
