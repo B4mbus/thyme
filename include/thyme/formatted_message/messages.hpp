@@ -94,8 +94,6 @@ struct MessageWriter<FormattedMessage<TitleStyle, BodyStyle, HintStyle, ContextS
 
       format_content(ContextStyle.body, body_without_newline);
     }
-
-    return newline();
   }
 };
 
