@@ -7,6 +7,7 @@
 
 #include "thyme/generated/version.hpp"
 
+#include "thyme/formatted_message/messages.hpp"
 #include "thyme/cli_handler.hpp"
 #include "thyme/thyme.hpp"
 
@@ -56,7 +57,10 @@ auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
     main_parser.parse_args(config.argc, config.argv);
 
   } catch(std::runtime_error const& err) {
-    fmt::print("{}\n{}", err.what(), main_parser.help().str());
+    thyme::error("{}", err.what())
+      .write(stderr);
+
+    fmt::print("{}", main_parser.help().str());
     return -1;
   }
 

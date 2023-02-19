@@ -16,9 +16,9 @@
 #include "thyme/generated/fennel_scripts.hpp"
 #include "thyme/generated/version.hpp"
 
+#include "thyme/formatted_message/messages.hpp"
 #include "thyme/synchronized_process.hpp"
 #include "thyme/cli_handler.hpp"
-#include "thyme/formatted_message/messages.hpp"
 #include "thyme/error.hpp"
 
 namespace {
@@ -123,10 +123,14 @@ auto CLIHandler::version(argparse::ArgumentParser& parser) const -> void {
     auto const print_errors = [](InvocationError const& error) {
       switch(error.reason) {
         case InvocationError::TimedOut:
-          fmt::print("{}", thyme::Error("While trying to get version info. Process timed out after {}ms.", error.value));
+          thyme::error("While trying to get fennel and lua version info. Process timed out after {}ms", error.value)
+            .write(stderr);
           break;
         case InvocationError::NonZeroExitCode:
-          fmt::print("{}", thyme::Error("While trying to get version info. Process exited with exit code {}.", error.value));
+          thyme::error("While trying to get fennel and lua version info. Process exited with exit code {}", error.value)
+            .hint("Check if the directory where the `fennel` file is located is added to path")
+            .context("Stderr", "{}", error.stderr)
+            .write(stderr);
           break;
       }
     };
