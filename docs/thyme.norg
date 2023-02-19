@@ -33,6 +33,8 @@ ___
   > `thyme` will run `help` by default
 
 **** *`new <project-dir> <src> <out>`* Initializes a new fennel project.
+     > If `src` or `out` differ from the defaults values, thyme will create a
+       default config with these values set accordingly.
      - `<project-dir>` Path to the project directory (^defaults to `.`^).
      - `<src>` The name of the source directory (^defaults to `fnl`^).
      - `<out>` The name of the output directory (^defaults to `lua`^).
