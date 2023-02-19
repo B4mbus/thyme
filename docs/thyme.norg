@@ -44,7 +44,7 @@ ___
        To specify nested values use a dot (e.g. `compiler-options.lua`).
      - `<value>` One or more values, e.g. `src compiler-options.lua`.
      - `--whole -w` Shows all the configuration values instead of just the ones affected by the config.
-     - `--generate -g` Automatically generate a default config.
+     - `--reset -r` Reset the current config to a default one or create a default one if it doesn't exist.
 
 **** *`build`* Builds the project by reading values from config or CLI.
      > *This is closely related to the config itself, every field can be overriden from the CLI (unless `--prefer-config` is set).
