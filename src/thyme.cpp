@@ -79,6 +79,11 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
 auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
   auto& main_parser = config.main_parser.get();
 
+  if(config.argc == 1) {
+    fmt::print("{}", main_parser.help().str());
+    return 0;
+  }
+
   try {
     main_parser.parse_args(config.argc, config.argv);
 
