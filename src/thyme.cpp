@@ -44,7 +44,7 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
     .argv = argv,
     .main_parser = std::ref(program),
     .handlers = {
-      { "version", &CLIHandler::version, std::ref(version_subcommand) } }
+      { "version", &CLIHandler::version_handler, std::ref(version_subcommand) } }
   };
 
   return dispatch_handlers(cli_config);

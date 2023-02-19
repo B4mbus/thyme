@@ -10,7 +10,7 @@ namespace thyme {
 
 class CLIHandler {
 public:
-  auto version(argparse::ArgumentParser& parser) const -> void;
+  auto version_handler(argparse::ArgumentParser& parser) const -> void;
 };
 
 } // namespace thyme

@@ -126,7 +126,7 @@ auto print_errors(InvocationError const& error) {
 
 namespace thyme {
 
-auto CLIHandler::version(argparse::ArgumentParser& parser) const -> void {
+auto CLIHandler::version_handler(argparse::ArgumentParser& parser) const -> void {
   auto constexpr print_version = [](auto name, auto version, auto fg_format) {
     fmt::print(
       "{} version: {}\n",
