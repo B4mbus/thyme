@@ -60,6 +60,12 @@ auto Thyme::handle_cli(int argc, char** argv) -> int {
     .default_value(fs::path("lua"))
     .required();
 
+  new_subcommand
+    .add_argument("-n", "--no-git")
+    .help("Don't do `git init` in the project dir.")
+    .default_value(false)
+    .implicit_value(true);
+
   program.add_subparser(new_subcommand);
   program.add_subparser(version_subcommand);
 
