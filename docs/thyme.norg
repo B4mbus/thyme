@@ -71,7 +71,7 @@ ___
 
 * The config
   > The config will be written as a fennel file, the filename will be `thyme.fnl`, further referred to as **buildfile**.
-    Syntax: `name: type [default value]`, not everything has a default value.
+    Syntax of the list below: `name: type [default value]`, not everything has a default value.
     `[X]` as a type means `array of X`, e.g. `[string]`
 
   The following keys with the following types can be configured:
