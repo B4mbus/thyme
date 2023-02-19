@@ -79,6 +79,7 @@ ___
 
   - *`src: string [fnl]`* Path to the source directory relative to the buildfile.
   - *`out: string [lua]`* Path to the output directory relative to the buildfile.
+  - *`main-file: string [main.fnl]`* Name of the main fennel file.
   - *`overwrite-out: boolean [true]`* Overwrite the `out` directory if it already exists.
   - *`fennel-path: string [fennel]`* Can either be a name accessible in `$PATH` or a full path to the fennel tool.
   - *`compiler-options: table`* Options directly passed to the fennel compiler.
