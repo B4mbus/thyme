@@ -69,34 +69,37 @@ ___
 
 
 * The config
-  > The config will be written as a fennel file, the filename will be `thyme.fnl`, further referred to as **buildfile**.
-    Syntax of the list below: `name: type [default value]`, not everything has a default value.
-    `[X]` as a type means `array of X`, e.g. `[string]`
+  > The config will be written as a fennel file, the filename will be `thyme.fnl`, further referred to as *buildfile*.
+    The buildfile should return an array with the desired configuration.
+
+  Syntax of the list below: `name: type [default value]`, not everything has a default value.
+  `[X]` as a type means `array of X`, e.g. `[string]`
 
   The following keys with the following types can be configured:
 
   - *`src: string [fnl]`* Path to the source directory relative to the buildfile.
-  - *`out: string [lua]`* Path to the output directory.
+  - *`out: string [lua]`* Path to the output directory relative to the buildfile.
   - *`overwrite-out: boolean [true]`* Overwrite the `out` directory if it already exists.
-  - *`compiler-options: table [depending whether used installed packages, see [1]]`* Options directly passed to the fennel compiler.
-  - *`no-searcher: boolean`* Skip installing package.searchers entry.
-  - *`indent: string ['']`* Value to indent compiler output with. By default none to minimize the output size.
-  - *`add-package-path: string`* Add path to package.path for finding Lua modules.
-  - *`add-fennel-path: string`* Add path to fennel.path for finding Fennel modules.
-  - *`add-macro-path: string`* - Add path to fennel.macroath for macro modules.
-  - *`globals: [string]`* Allow these globals in addition to standard ones.
-  - *`globals-only: [string]`* Same as above, but exclude standard ones.
-  - *`require-as-include: boolean`* Inline required modules in the output.
-  - *`skip-include: [string]`* Omit certain modules from output when included.
-  - *`use-bit-lib: boolean`* Use LuaJITs bit library instead of operators.
-  - *`metadata: boolean`* Enable or disable function metadata, even in compiled output.
-  - *`correlate: boolean`* Make Lua output line numbers match Fennel input.
-  - *`load: string`* Load the specified file before executing the command.
-  - *`lua: string`* Run using a particular lua binary
-  - *`no-fennelrc: boolean`* Skip loading ~/.fennelrc when launching repl.
-  - *`raw-errors: boolean`* Disable friendly compile error reporting.
-  - *`plugin: string`* Activate the compiler plugin in FILE.
-  - *`no-compiler-sandbox: [boolean]`* Do not limit compiler environment to minimal sandbox.
+  - *`fennel-path: string [fennel]`* Can either be a name accessible in `$PATH` or a full path to the fennel tool.
+  - *`compiler-options: table`* Options directly passed to the fennel compiler.
+  -- *`no-searcher: boolean`* Skip installing package.searchers entry.
+  -- *`indent: string ['']`* Value to indent compiler output with. By default none to minimize the output size.
+  -- *`add-package-path: string`* Add path to package.path for finding Lua modules.
+  -- *`add-fennel-path: string`* Add path to fennel.path for finding Fennel modules.
+  -- *`add-macro-path: string`* - Add path to fennel.macroath for macro modules.
+  -- *`globals: [string]`* Allow these globals in addition to standard ones.
+  -- *`globals-only: [string]`* Same as above, but exclude standard ones.
+  -- *`require-as-include: boolean`* Inline required modules in the output.
+  -- *`skip-include: [string]`* Omit certain modules from output when included.
+  -- *`use-bit-lib: boolean`* Use LuaJITs bit library instead of operators.
+  -- *`metadata: boolean`* Enable or disable function metadata, even in compiled output.
+  -- *`correlate: boolean`* Make Lua output line numbers match Fennel input.
+  -- *`load: string`* Load the specified file before executing the command.
+  -- *`lua: string`* Run using a particular lua binary
+  -- *`no-fennelrc: boolean`* Skip loading ~/.fennelrc when launching repl.
+  -- *`raw-errors: boolean`* Disable friendly compile error reporting.
+  -- *`plugin: string`* Activate the compiler plugin in FILE.
+  -- *`no-compiler-sandbox: boolean`* Do not limit compiler environment to minimal sandbox.
 
 
 * API
