@@ -91,6 +91,22 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
   return { tl::in_place, fennel_ver, lua_ver };
 }
 
+auto print_errors(InvocationError const& error) {
+  switch(error.reason) {
+    case InvocationError::TimedOut:
+      thyme::error("While trying to get fennel and lua version info. Process timed out after {}ms", error.value)
+        .write(stderr);
+      break;
+    case InvocationError::NonZeroExitCode:
+      thyme::error("While trying to get fennel and lua version info. Process exited with exit code {}", error.value)
+        .hint("Check if the directory where the `fennel` file is located is added to path")
+        .hint("Alternatively, configure path to the fennel tool in the buildfile")
+        .context("Stderr", "{}", error.stderr)
+        .write(stderr);
+      break;
+  }
+}
+
 } // namespace
 
 namespace thyme {
@@ -113,31 +129,15 @@ auto CLIHandler::version(argparse::ArgumentParser& parser) const -> void {
     using namespace std::chrono_literals;
     auto const version_info = get_fennel_and_lua_version_info(300ms);
 
-    auto const print_versions = [include_fennel, include_lua, print_version](VersionInfo const& version_info) {
+    auto const print_lua_and_fennel_version = [include_fennel, include_lua, print_version](VersionInfo const& version_info) {
       if(include_fennel)
         print_version("Fennel", version_info.fennel_version, fg(fmt::color::light_green));
       if(include_lua)
         print_version("Lua", version_info.lua_version, fg(fmt::color::blue));
     };
 
-    auto const print_errors = [](InvocationError const& error) {
-      switch(error.reason) {
-        case InvocationError::TimedOut:
-          thyme::error("While trying to get fennel and lua version info. Process timed out after {}ms", error.value)
-            .write(stderr);
-          break;
-        case InvocationError::NonZeroExitCode:
-          thyme::error("While trying to get fennel and lua version info. Process exited with exit code {}", error.value)
-            .hint("Check if the directory where the `fennel` file is located is added to path")
-            .hint("Alternatively, configure path to the fennel tool in the buildfile")
-            .context("Stderr", "{}", error.stderr)
-            .write(stderr);
-          break;
-      }
-    };
-
     version_info
-      .map(print_versions)
+      .map(print_lua_and_fennel_version)
       .map_error(print_errors);
   }
 }
