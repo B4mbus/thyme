@@ -155,10 +155,10 @@ auto CLIHandler::version_handler(argparse::ArgumentParser& parser) const -> int 
       return 0;
     };
 
-    return version_info
-      .map(print_lua_and_fennel_version)
-      .map_error(print_errors)
-      .value();
+    if(version_info)
+      return version_info.map(print_lua_and_fennel_version).value();
+    else
+      return version_info.map_error(print_errors).error();
   }
 
   return 0;
