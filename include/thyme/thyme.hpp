@@ -5,14 +5,12 @@
 
 #include <argparse/argparse.hpp>
 
+#include "thyme/cli_handler.hpp"
+
 namespace thyme {
 
-class CLIHandler;
-
 struct HandlerDefinition {
-  using SubcommandHandlerFnPtr = auto(thyme::CLIHandler::*)(argparse::ArgumentParser&) const -> int;
-
-  SubcommandHandlerFnPtr handler_fn;
+  CLIHandler::HandlerFnPtr handler_fn;
   std::reference_wrapper<argparse::ArgumentParser> parser;
 };
 
