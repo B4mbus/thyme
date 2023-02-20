@@ -12,9 +12,13 @@ class CLIHandler;
 struct HandlerDefinition {
   using SubcommandHandlerFnPtr = auto(thyme::CLIHandler::*)(argparse::ArgumentParser&) const -> void;
 
-  std::string_view subcommand;
   SubcommandHandlerFnPtr handler_fn;
   std::reference_wrapper<argparse::ArgumentParser> parser;
+};
+
+struct NamedHandlerDefinition {
+  std::string_view subcommand;
+  HandlerDefinition definition;
 };
 
 struct CLIConfig {
@@ -23,7 +27,8 @@ struct CLIConfig {
 
   std::reference_wrapper<argparse::ArgumentParser> main_parser;
 
-  std::vector<HandlerDefinition> handlers;
+  HandlerDefinition default_handler;
+  std::vector<NamedHandlerDefinition> subcommands_handlers;
 };
 
 class Thyme {
