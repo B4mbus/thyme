@@ -6,8 +6,9 @@
 
 namespace thyme {
 
-auto CLIHandler::default_handler(argparse::ArgumentParser& parser) const -> void {
+auto CLIHandler::default_handler(argparse::ArgumentParser& parser) const -> int {
   fmt::print("{}", parser.help().str());
+  return 0;
 }
 
 } // namespace thyme

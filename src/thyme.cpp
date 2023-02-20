@@ -89,7 +89,7 @@ auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
 
   if(config.argc == 1) {
     auto const& [handler_fn, parser] = config.default_handler;
-    std::invoke(handler_fn, cli_handler, parser);
+    return std::invoke(handler_fn, cli_handler, parser);
   }
 
   try {
@@ -105,10 +105,8 @@ auto Thyme::dispatch_handlers(CLIConfig& config) -> int {
 
   for(auto&& [subcommand, handler_def] : config.subcommands_handlers) {
     if(main_parser.is_subcommand_used(subcommand))
-      std::invoke(handler_def.handler_fn, cli_handler, handler_def.parser);
+      return std::invoke(handler_def.handler_fn, cli_handler, handler_def.parser);
   }
-
-  return 0;
 }
 
 } // namespace thyme

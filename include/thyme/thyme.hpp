@@ -10,7 +10,7 @@ namespace thyme {
 class CLIHandler;
 
 struct HandlerDefinition {
-  using SubcommandHandlerFnPtr = auto(thyme::CLIHandler::*)(argparse::ArgumentParser&) const -> void;
+  using SubcommandHandlerFnPtr = auto(thyme::CLIHandler::*)(argparse::ArgumentParser&) const -> int;
 
   SubcommandHandlerFnPtr handler_fn;
   std::reference_wrapper<argparse::ArgumentParser> parser;

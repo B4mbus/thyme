@@ -5,8 +5,9 @@
 
 namespace thyme {
 
-auto CLIHandler::new_handler(argparse::ArgumentParser& parser) const -> void {
+auto CLIHandler::new_handler(argparse::ArgumentParser& parser) const -> int {
   thyme::error("Unimplemented!").write(stderr);
+  return 0;
 }
 
 } // namespace thyme

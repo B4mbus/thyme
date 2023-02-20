@@ -101,7 +101,7 @@ auto get_fennel_and_lua_version_info(thyme::SynchronizedProcess::Millis timeout)
   return { tl::in_place, fennel_ver, lua_ver };
 }
 
-auto print_errors(InvocationError const& error) {
+auto print_errors(InvocationError const& error) -> int {
   switch(error.reason) {
     case InvocationError::TimedOut:
       thyme::error("While trying to get fennel and lua version info. Process timed out after {}ms", error.value)
@@ -120,13 +120,15 @@ auto print_errors(InvocationError const& error) {
         .write(stderr);
       break;
   }
+
+  return -1;
 }
 
 } // namespace
 
 namespace thyme {
 
-auto CLIHandler::version_handler(argparse::ArgumentParser& parser) const -> void {
+auto CLIHandler::version_handler(argparse::ArgumentParser& parser) const -> int {
   auto constexpr print_version = [](auto name, auto version, auto fg_format) {
     fmt::print(
       "{} version: {}\n",
@@ -144,17 +146,22 @@ auto CLIHandler::version_handler(argparse::ArgumentParser& parser) const -> void
     using namespace std::chrono_literals;
     auto const version_info = get_fennel_and_lua_version_info(300ms);
 
-    auto const print_lua_and_fennel_version = [include_fennel, include_lua, print_version](VersionInfo const& version_info) {
+    auto const print_lua_and_fennel_version = [include_fennel, include_lua, print_version](VersionInfo const& version_info) -> int {
       if(include_fennel)
         print_version("Fennel", version_info.fennel_version, fg(fmt::color::light_green));
       if(include_lua)
         print_version("Lua", version_info.lua_version, fg(fmt::color::blue));
+
+      return 0;
     };
 
-    version_info
+    return version_info
       .map(print_lua_and_fennel_version)
-      .map_error(print_errors);
+      .map_error(print_errors)
+      .value();
   }
+
+  return 0;
 }
 
 } // namespace thyme
