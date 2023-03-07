@@ -14,7 +14,7 @@ public:
 private:
 
   template<typename>
-  inline static auto No_MessageWrite_Specialization_Found = false;
+  inline static auto constexpr No_MessageWrite_Specialization_Found = false;
 };
 
 } // namespace thyme
