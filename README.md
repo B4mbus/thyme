@@ -10,6 +10,10 @@
 
 </div>
 
+Project still very much WIP.
+
+[The CLI, config and roadmap](docs/thyme.md) is considered mostly done and stable, but it might change.
+
 ## 💾 Installation
 
 ## ⚙ Configuration
