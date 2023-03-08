@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <cassert>
+#include <ranges>
 
 #include <fmt/format.h>
 #include <fmt/color.h>
@@ -98,6 +100,9 @@ private:
   }
 
   static auto print_context(auto const& title, auto const& body) {
+    namespace rg = std::ranges;
+    namespace vw = std::views;
+
     end_indent();
 
     format_title(ContextStyle.title, title);
@@ -109,7 +114,25 @@ private:
       return ctx_body;
     }();
 
-    format_content(ContextStyle.body, body_without_newline);
+    auto lines_view = body_without_newline | vw::split('\n');
+    auto lines = lines_view | vw::transform([](auto line) { return std::string_view(line.begin(), line.end()); });
+    auto const longest_line_len = rg::max(lines | vw::transform(&std::string_view::size));
+
+    for(auto first = true; auto line : lines) {
+      using namespace fmt;
+
+      if(not first) {
+        auto const padding_format = format("{{indent_padding:2}}{{title_padding:{}}}", title.size() + 2);
+        print(
+          runtime(padding_format),
+          arg("indent_padding", ' '),
+          arg("title_padding", ' ')
+        );
+      }
+
+      format_content(ContextStyle.body, fmt::format("{}{}", line, std::string(longest_line_len - line.size(), ' ')));
+      first = false;
+    }
   }
 };
 
