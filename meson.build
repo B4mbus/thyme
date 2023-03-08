@@ -53,6 +53,7 @@ sources = files(
   'src/cli_handlers/version.cpp',
   'src/cli_handlers/new.cpp',
 
+  'src/cli_handler.cpp',
   'src/thyme.cpp'
 )
 
