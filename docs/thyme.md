@@ -2,21 +2,21 @@
 
 
 Table of Contents
-- [The basic CLI interface](#the-basic-cli-interface)
-- [**`new <project-dir> <src> <out>`** Initializes a new fennel project.](#new-project-dir-src-out-initializes-a-new-fennel-project)
-- [**`config <value> <value> ...`** Displays one value or the entire config.](#config-value-value-displays-one-value-or-the-entire-config)
-- [**`build`** Builds the project by reading values from config or CLI.](#build-builds-the-project-by-reading-values-from-config-or-cli)
-- [**`run`** Run the entire project.](#run-run-the-entire-project)
-- [**`version`** Displays thyme's, fennel's and lua's version if it can find one.](#version-displays-thymes-fennels-and-luas-version-if-it-can-find-one)
-- [**`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).](#issue-creates-issue-pre-filled-with-debug-information-os-neovim-thyme-fennel-lua-version-logs-etc)
-- [\(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).](#030-everything-after-will-be-passed-to-the-buildfile-if-present-see-define-cli)
-- [The config](#the-config)
-- [API](#api)
-- [Roadmap](#roadmap)
-- [**0.1.0**](#010)
-- [**0.2.0**](#020)
-- [**0.3.0**](#030)
-- [**0.4.0**](#040)
+• [The basic CLI interface](#the-basic-cli-interface)
+• [**`new <project-dir> <src> <out>`** Initializes a new fennel project.](#new-project-dir-src-out-initializes-a-new-fennel-project)
+• [**`config <value> <value> ...`** Displays one value or the entire config.](#config-value-value-displays-one-value-or-the-entire-config)
+• [**`build`** Builds the project by reading values from config or CLI.](#build-builds-the-project-by-reading-values-from-config-or-cli)
+• [**`run`** Run the entire project.](#run-run-the-entire-project)
+• [**`version`** Displays thyme's, fennel's and lua's version if it can find one.](#version-displays-thymes-fennels-and-luas-version-if-it-can-find-one)
+• [**`issue`** Creates issue pre-filled with debug information (OS, neovim & thyme & fennel & lua version, logs, etc.).](#issue-creates-issue-pre-filled-with-debug-information-os-neovim-thyme-fennel-lua-version-logs-etc)
+• [\(**0.3.0**\) **`--`** Everything after `--` will be passed to the **buildfile** if present (see `define-cli?`).](#030-everything-after-will-be-passed-to-the-buildfile-if-present-see-define-cli)
+• [The config](#the-config)
+• [API](#api)
+• [Roadmap](#roadmap)
+• [**0.1.0**](#010)
+• [**0.2.0**](#020)
+• [**0.3.0**](#030)
+• [**0.4.0**](#040)
 
 
 
@@ -30,19 +30,20 @@ Table of Contents
 
 #### **`new <project-dir> <src> <out>`** Initializes a new fennel project.
 
+> This option will always create a default config.
 - `<project-dir>` Path to the project directory (<sup>defaults to `.`</sup>).
 - `<src>` The name of the source directory (<sup>defaults to `fnl`</sup>).
 - `<out>` The name of the output directory (<sup>defaults to `lua`</sup>).
 - `--no-git -n` Don't do `git init` in the project dir.
-- `--generate -g` Automatically generate a default config.
 
 
 #### **`config <value> <value> ...`** Displays one value or the entire config.
 
-> If no argument is passed it shows the entire config.
+> If no argument is passed it shows the entire **set** config
 To specify nested values use a dot (e.g. `compiler-options.lua`).
 - `<value>` One or more values, e.g. `src compiler-options.lua`.
-- `--generate -g` Automatically generate a default config.
+- `--whole -w` Shows all the configuration values instead of just the ones affected by the config.
+- `--reset -r` Reset the current config to a default one or create a default one if it doesn't exist.
 
 
 #### **`build`** Builds the project by reading values from config or CLI.
@@ -80,33 +81,37 @@ If a value has been set both in the CLI and in the config there will be a warnin
 # The config
 
 > The config will be written as a fennel file, the filename will be `thyme.fnl`, further referred to as **buildfile**.
-Syntax: `name: type [default value]`, not everything has a default value.
+The buildfile should return an array with the desired configuration.
+
+Syntax of the list below: `name: type [default value]`, not everything has a default value.
 `[X]` as a type means `array of X`, e.g. `[string]`
 
 The following keys with the following types can be configured:
 
 - **`src: string [fnl]`** Path to the source directory relative to the buildfile.
-- **`out: string [lua]`** Path to the output directory.
+- **`out: string [lua]`** Path to the output directory relative to the buildfile.
+- **`main-file: string [main.fnl]`** Name of the main fennel file.
 - **`overwrite-out: boolean [true]`** Overwrite the `out` directory if it already exists.
-- **`compiler-options: table [depending whether used installed packages, see [1]]`** Options directly passed to the fennel compiler.
-- **`no-searcher: boolean`** Skip installing package.searchers entry.
-- **`indent: string ['']`** Value to indent compiler output with. By default none to minimize the output size.
-- **`add-package-path: string`** Add path to package.path for finding Lua modules.
-- **`add-fennel-path: string`** Add path to fennel.path for finding Fennel modules.
-- **`add-macro-path: string`** - Add path to fennel.macroath for macro modules.
-- **`globals: [string]`** Allow these globals in addition to standard ones.
-- **`globals-only: [string]`** Same as above, but exclude standard ones.
-- **`require-as-include: boolean`** Inline required modules in the output.
-- **`skip-include: [string]`** Omit certain modules from output when included.
-- **`use-bit-lib: boolean`** Use LuaJITs bit library instead of operators.
-- **`metadata: boolean`** Enable or disable function metadata, even in compiled output.
-- **`correlate: boolean`** Make Lua output line numbers match Fennel input.
-- **`load: string`** Load the specified file before executing the command.
-- **`lua: string`** Run using a particular lua binary
-- **`no-fennelrc: boolean`** Skip loading ~/.fennelrc when launching repl.
-- **`raw-errors: boolean`** Disable friendly compile error reporting.
-- **`plugin: string`** Activate the compiler plugin in FILE.
-- **`no-compiler-sandbox: [boolean]`** Do not limit compiler environment to minimal sandbox.
+- **`fennel-path: string [fennel]`** Can either be a name accessible in `$PATH` or a full path to the fennel tool.
+- **`compiler-options: table`** Options directly passed to the fennel compiler.
+    - **`no-searcher: boolean`** Skip installing package.searchers entry.
+    - **`indent: string ['']`** Value to indent compiler output with. By default none to minimize the output size.
+    - **`add-package-path: string`** Add path to package.path for finding Lua modules.
+    - **`add-fennel-path: string`** Add path to fennel.path for finding Fennel modules.
+    - **`add-macro-path: string`** - Add path to fennel.macroath for macro modules.
+    - **`globals: [string]`** Allow these globals in addition to standard ones.
+    - **`globals-only: [string]`** Same as above, but exclude standard ones.
+    - **`require-as-include: boolean`** Inline required modules in the output.
+    - **`skip-include: [string]`** Omit certain modules from output when included.
+    - **`use-bit-lib: boolean`** Use LuaJITs bit library instead of operators.
+    - **`metadata: boolean`** Enable or disable function metadata, even in compiled output.
+    - **`correlate: boolean`** Make Lua output line numbers match Fennel input.
+    - **`load: string`** Load the specified file before executing the command.
+    - **`lua: string`** Run using a particular lua binary
+    - **`no-fennelrc: boolean`** Skip loading ~/.fennelrc when launching repl.
+    - **`raw-errors: boolean`** Disable friendly compile error reporting.
+    - **`plugin: string`** Activate the compiler plugin in FILE.
+    - **`no-compiler-sandbox: boolean`** Do not limit compiler environment to minimal sandbox.
 
 
 
@@ -123,7 +128,7 @@ The following keys with the following types can be configured:
 
 # Roadmap
 
-> _<ins>Underlined</ins> list items are for consideration._
+> _<u>Underlined</u> list items are for consideration._
 
 
 ## **0.1.0**:
@@ -143,11 +148,11 @@ The following keys with the following types can be configured:
 
 ## **0.3.0**:
 
-- <ins>build logs</ins>
-- <ins>`thyme test`</ins>
-- <ins>`thyme compile` (uses `--compile-binary` to compile a project)</ins>
+- <u>build logs</u>
+- <u>`thyme test`</u>
+- <u>`thyme compile` (uses `--compile-binary` to compile a project)</u>
 
 
-## **?**:
+## **0.3.0/0.4.0**:
 
-- dependency management
+- <u>dependency management</u>
