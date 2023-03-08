@@ -20,7 +20,7 @@ fs = import('fs')
 
 fennel_scripts_file = configure_file(
   configuration: {
-    'FENNEL_VERSION_EXTRACTION_SCRIPT': fs.read('fnl/version_extraction.fnl').strip()
+    'FENNEL_VERSION_EXTRACTION_SCRIPT': fs.read('fnl/version_extraction.fnl').strip().replace('"', '\"')
   },
   input: 'template/fennel_scripts.cpp.in',
   output: 'fennel_scripts.cpp'
