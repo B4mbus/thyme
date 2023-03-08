@@ -46,56 +46,70 @@ struct MessageWriter<FormattedMessage<TitleStyle, BodyStyle, HintStyle, ContextS
 
   static auto write(FormattedMsg const& msg, FILE* file) {
     assert((file == stdout or file == stderr) && "The file is expected to be stdout or stderr.");
-    using namespace fmt;
 
-    auto const format_title = [](auto const& color, auto const& content) {
-      print(emphasis::bold | fg(color::light_gray) | bg(color), " {} ", content);
-    };
-
-    auto const newline = [] { return print("\n"); };
-    auto const format_content = [newline](auto const& color, auto const& content) {
-      print(bg(color) | fg(color::white), " {} ", content);
-      newline();
-    };
-
-    auto const continued_indent = [] { print(" ├"); };
-    auto const end_indent = [] { print(" └"); };
-
-    format_title(TitleStyle, msg.m_title);
-    format_content(BodyStyle, msg.m_body);
+    print_main_bar(msg.m_title, msg.m_body);
 
     auto const context_present = not msg.m_context_body.empty();
 
-    if(not msg.hints.empty()) {
-      for(auto i = 0ULL; i < msg.hints.size(); ++i) {
-        if(context_present or i == msg.hints.size() - 1)
-          continued_indent();
-        else
-          end_indent();
-
-        auto const& [title, body] = msg.hints[i];
-
-        format_title(HintStyle.title, title);
-        format_content(HintStyle.body, body);
-      }
-    }
-
-    if(context_present) {
-      end_indent();
-
-      format_title(ContextStyle.title, msg.m_context_title);
-
-      auto const body_without_newline = [ctx_body = msg.m_context_body]() mutable {
-        while(ctx_body.back() == '\n')
-          ctx_body.pop_back();
-
-        return ctx_body;
-      }();
-
-      format_content(ContextStyle.body, body_without_newline);
-    }
+    if(not msg.hints.empty()) print_hints(context_present, msg.hints);
+    if(context_present) print_context(msg.m_context_title, msg.m_context_body);
 
     newline();
+  }
+
+private:
+  static auto continued_indent() { fmt::print(" ├"); };
+
+  static auto end_indent() { fmt::print(" └"); };
+
+  static auto newline() { return fmt::print("\n"); };
+
+  static auto format_title(auto const& color, auto const& content) {
+    using namespace fmt;
+
+    print(emphasis::bold | fg(color::light_gray) | bg(color), " {} ", content);
+  };
+
+  static auto format_content(auto const& color, auto const& content) {
+    using namespace fmt;
+
+    print(bg(color) | fg(color::white), " {} ", content);
+
+    newline();
+  };
+
+  static auto print_bar(auto const& title_style, auto const& title, auto const& body_style, auto const& body) {
+    format_title(title_style, title);
+    format_content(body_style, body);
+  }
+
+  static auto print_main_bar(auto const& title, auto const& body) {
+    print_bar(TitleStyle, title, BodyStyle, body); // main bar
+  }
+
+  static auto print_hints(auto context_present, auto const& hints) {
+    for(auto i = 0ULL; auto const& [title, body] : hints) {
+      if(context_present or i++ == hints.size() - 1)
+        continued_indent();
+      else end_indent();
+
+      print_bar(HintStyle.title, title, HintStyle.body, body);
+    }
+  }
+
+  static auto print_context(auto const& title, auto const& body) {
+    end_indent();
+
+    format_title(ContextStyle.title, title);
+
+    auto const body_without_newline = [ctx_body = body]() mutable {
+      while(ctx_body.back() == '\n')
+        ctx_body.pop_back();
+
+      return ctx_body;
+    }();
+
+    format_content(ContextStyle.body, body_without_newline);
   }
 };
 
